@@ -45,7 +45,7 @@ int main() {
     sf::RenderWindow screen(
         sf::VideoMode(window.get_size().x, window.get_size().y),
         window.get_title().c_str(), sf::Style::Default, settings);
-    // screen.setFramerateLimit(MAX_FPS);
+    screen.setFramerateLimit(MAX_FPS);
 
     Camera camera(window.get_size().x, &map, &player, &screen);
 

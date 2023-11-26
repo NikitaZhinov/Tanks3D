@@ -21,7 +21,7 @@ class Camera {
     void draw();
 
    private:
-    double viewing_angle = M_PI / 1.5, length = 1000;
+    double viewing_angle = M_PI / 1.5, length = 300;
     int number_of_lines;
     sf::RectangleShape line;
     double d_, deviation, dx, k, b;
@@ -32,8 +32,8 @@ class Camera {
     Point2 points_player[2];
     double floor_height = 1;
 
-    double get_distance(int index, Object* obj);
     double get_distance(Object* obj);
+    double get_distance_to_obj(Object* obj);
     void sort_objs();
     void sort_objs(int start, int end);
     int sort_objs_(int left, int right);

@@ -4,7 +4,7 @@ Camera::Camera(int number_of_lines, Map* map, Player* player,
                sf::RenderWindow* screen) {
     set_number_of_lines(number_of_lines);
     this->d_ =
-        (std::sin(M_PI - this->viewing_angle / 2) * this->number_of_lines / 2) /
+        (std::sin(M_PI - this->viewing_angle / 2) * (*screen).getSize().x / 2) /
         std::sin(this->viewing_angle / 2);
     this->deviation = this->viewing_angle / this->number_of_lines;
 
@@ -54,8 +54,17 @@ void Camera::draw() {
         this->b =
             (this->points_player)[0].y - this->k * (this->points_player)[0].x;
 
+        // sf::Vertex line[] = {
+        //     sf::Vertex(sf::Vector2f((this->points_player)[0].x,
+        //     (this->points_player)[0].y)),
+        //     sf::Vertex(sf::Vector2f((this->points_player)[1].x,
+        //     (this->points_player)[1].y)),
+        // };
+        // (*screen).draw(line, 2, sf::Lines);
+
         for (int j = 0; j < (this->objs).size(); j++) {
-            double d = get_distance(i, &((this->objs)[j]));
+            double da = std::abs((*this->player).get_angle() - this->angle_player_line);
+            double d = get_distance(&((this->objs)[j])) * std::cos(da) + std::sin(da);
             if (d >= 0) {
                 double b_ = this->d_ / d * (this->objs)[j].get_height();
                 double len = (*this->screen).getSize().x /
@@ -64,7 +73,7 @@ void Camera::draw() {
                 (this->line)
                     .setPosition(
                         len * i,
-                        ((double)(*this->screen).getSize().y - b_) / 2);
+                        ((double)(*this->screen).getSize().y - b_) / 2 );
                 int color = 255 - d;
                 if (color < 0) color = 0;
                 (this->line).setFillColor(sf::Color(0, color, 0));
@@ -75,7 +84,7 @@ void Camera::draw() {
     }
 }
 
-double Camera::get_distance(int index, Object* obj) {
+double Camera::get_distance(Object* obj) {
     // if object is not initialized
     if ((*obj).get_points().empty()) return -1;
 
@@ -84,14 +93,6 @@ double Camera::get_distance(int index, Object* obj) {
     Point2 points_obj[count_points_obj];
     for (int i = 0; i < count_points_obj; i++)
         points_obj[i] = (*obj).get_points()[i];
-
-    // sf::Vertex line[] = {
-    //     sf::Vertex(sf::Vector2f((this->points_player)[0].x,
-    //     (this->points_player)[0].y)),
-    //     sf::Vertex(sf::Vector2f((this->points_player)[1].x,
-    //     (this->points_player)[1].y)),
-    // };
-    // (*screen).draw(line, 2, sf::Lines);
 
     double len = this->length;
     bool flag = false;
@@ -148,10 +149,10 @@ double Camera::get_distance(int index, Object* obj) {
             len = std::min(
                 len,
                 std::sqrt(std::pow(std::max(x, (this->points_player)[0].x) -
-                                       std::min(x, (this->points_player)[0].x),
+                                        std::min(x, (this->points_player)[0].x),
                                    2) +
-                          std::pow(std::max(y, (this->points_player)[0].y) -
-                                       std::min(y, (this->points_player)[0].y),
+                            std::pow(std::max(y, (this->points_player)[0].y) -
+                                        std::min(y, (this->points_player)[0].y),
                                    2)));
         }
     }
@@ -160,7 +161,7 @@ double Camera::get_distance(int index, Object* obj) {
     return len;
 }
 
-double Camera::get_distance(Object* obj) {
+double Camera::get_distance_to_obj(Object* obj) {
     return std::sqrt(std::pow(std::max((*obj).get_points()[0].x,
                                        (*this->player).get_position().x) -
                                   std::min((*obj).get_points()[0].x,
