@@ -36,7 +36,6 @@ std::vector<Object> Camera::get_map() { return this->objs; }
 Player* Camera::get_player() { return this->player; }
 
 void Camera::draw() {
-    sort_objs();
     for (int i = 0; i < this->number_of_lines; i++) {
         this->angle_player_line = (*this->player).get_angle() -
                                   this->viewing_angle / 2 + i * this->deviation;
@@ -62,9 +61,10 @@ void Camera::draw() {
         // };
         // (*screen).draw(line, 2, sf::Lines);
 
+        sort_objs();
+
         for (int j = 0; j < (this->objs).size(); j++) {
-            double da = std::abs((*this->player).get_angle() - this->angle_player_line);
-            double d = get_distance(&((this->objs)[j])) * std::cos(da) + std::sin(da);
+            double d = get_distance(&((this->objs)[j]));
             if (d >= 0) {
                 double b_ = this->d_ / d * (this->objs)[j].get_height();
                 double len = (*this->screen).getSize().x /

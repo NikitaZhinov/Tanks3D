@@ -21,7 +21,7 @@ class Camera {
     void draw();
 
    private:
-    double viewing_angle = M_PI / 1.5, length = 300;
+    double viewing_angle = M_PI / 1.5, length = 255;
     int number_of_lines;
     sf::RectangleShape line;
     double d_, deviation, dx, k, b;
