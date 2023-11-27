@@ -73,7 +73,7 @@ void Camera::draw() {
                 (this->line)
                     .setPosition(
                         len * i,
-                        ((double)(*this->screen).getSize().y - b_) / 2 );
+                        ((double)(*this->screen).getSize().y - b_) / 2);
                 int color = 255 - d;
                 if (color < 0) color = 0;
                 (this->line).setFillColor(sf::Color(0, color, 0));
@@ -149,10 +149,10 @@ double Camera::get_distance(Object* obj) {
             len = std::min(
                 len,
                 std::sqrt(std::pow(std::max(x, (this->points_player)[0].x) -
-                                        std::min(x, (this->points_player)[0].x),
+                                       std::min(x, (this->points_player)[0].x),
                                    2) +
-                            std::pow(std::max(y, (this->points_player)[0].y) -
-                                        std::min(y, (this->points_player)[0].y),
+                          std::pow(std::max(y, (this->points_player)[0].y) -
+                                       std::min(y, (this->points_player)[0].y),
                                    2)));
         }
     }
