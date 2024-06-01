@@ -1,35 +1,49 @@
-#include <camera.hpp>
+#include "Camera/camera.hpp"
+#include "Map/map.hpp"
+#include "Player/player.hpp"
+#include "Window/window.hpp"
+
 #include <chrono>
-#include <map.hpp>
-#include <player.hpp>
-#include <window.hpp>
 
 namespace Time {
-namespace {
-double _time;
-double _deltaTime;
-}  // namespace
+    namespace {
+        double _time;
+        double _deltaTime;
+    } // namespace
 
-double time() { return _time; }
+    double time() {
+        return _time;
+    }
 
-double deltaTime() { return _deltaTime; }
+    double deltaTime() {
+        return _deltaTime;
+    }
 
-void update() {
-    std::chrono::duration<double> t =
-        std::chrono::system_clock::now().time_since_epoch();
-    _deltaTime = t.count() - _time;
-    _time = t.count();
-}
-}  // namespace Time
+    void update() {
+        std::chrono::duration<double> t =
+            std::chrono::system_clock::now().time_since_epoch();
+        _deltaTime = t.count() - _time;
+        _time = t.count();
+    }
+} // namespace Time
 
 int main() {
-    const int MAX_FPS = 60;
+    const int MAX_FPS = 1000;
 
-    Window window(800, 600, "RayCast");
+    Window window(800, 600, "Tanks3D");
     Player player(10, 110, 10, M_PI);
-    std::vector<Point2> points1 = {{0, 0}, {100, 0}, {100, 100}, {0, 100}};
+    std::vector<Point2> points1 = {
+        {   0,   0 },
+        { 100,   0 },
+        { 100, 100 },
+        {   0, 100 }
+    };
 
-    std::vector<Point2> points2 = {{200, 200}, {100, 300}, {200, 300}};
+    std::vector<Point2> points2 = {
+        { 200, 200 },
+        { 100, 300 },
+        { 200, 300 }
+    };
 
     Object obj1(points1);
     obj1.set_color(0, 0, 200);
@@ -44,15 +58,18 @@ int main() {
 
     sf::RenderWindow screen(
         sf::VideoMode(window.get_size().x, window.get_size().y),
-        window.get_title().c_str(), sf::Style::Default, settings);
+        window.get_title().c_str(),
+        sf::Style::Default,
+        settings);
     screen.setFramerateLimit(MAX_FPS);
 
-    Camera camera(window.get_size().x, &map, &player, &screen);
+    Camera camera(window.get_size().x, map, &player, &screen);
 
     while (screen.isOpen()) {
         sf::Event event;
         while (screen.pollEvent(event))
-            if (event.type == sf::Event::Closed) screen.close();
+            if (event.type == sf::Event::Closed)
+                screen.close();
 
         Time::update();
         int fps = 1.0 / Time::deltaTime();

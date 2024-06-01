@@ -1,6 +1,4 @@
-#include "player.hpp"
-
-#include <iostream>
+#include "Player/player.hpp"
 
 Player::Player(int x, int y, int r, double angle) {
     set_radius(r);
@@ -10,73 +8,74 @@ Player::Player(int x, int y, int r, double angle) {
 }
 
 void Player::init() {
-    this->texture.loadFromFile("../textures/player.png");
+    texture.loadFromFile("../textures/player.png");
 
-    this->shape.setPointCount(102);
-    this->shape.setPoint(0, sf::Vector2f(this->position.x, this->position.y));
+    shape.setPointCount(102);
+    shape.setPoint(0, sf::Vector2f(position.x, position.y));
     for (int i = 1; i <= 101; i++) {
-        this->shape.setPoint(
-            i, sf::Vector2f(std::sin(-this->angle) * this->radius,
-                            std::cos(-this->angle) * this->radius));
-        this->angle += 2 * M_PI / 100;
+        shape.setPoint(i, sf::Vector2f(std::sin(-angle) * radius, std::cos(-angle) * radius));
+        angle += 2 * M_PI / 100;
     }
-    this->angle -= 2 * M_PI / 100;
-    this->texture.setSmooth(true);
-    this->shape.setFillColor(sf::Color(255, 0, 0));
-    this->shape.setTexture(&texture);
+    angle -= 2 * M_PI / 100;
+    texture.setSmooth(true);
+    shape.setFillColor(sf::Color(255, 0, 0));
+    shape.setTexture(&texture);
 }
 
-Point2 Player::get_position() { return this->position; }
+Point2 Player::get_position() {
+    return position;
+}
 
-double Player::get_angle() { return this->angle; }
+double Player::get_angle() {
+    return angle;
+}
 
 void Player::set_position(int x, int y) {
-    this->position.x = x;
-    this->position.y = y;
+    position.x = x;
+    position.y = y;
 }
 
-float Player::get_radius() { return this->radius; }
+float Player::get_radius() {
+    return radius;
+}
 
-void Player::set_radius(float radius) { this->radius = radius; }
+void Player::set_radius(float radius) {
+    this->radius = radius;
+}
 
-sf::ConvexShape Player::get_shape() { return this->shape; }
+sf::ConvexShape Player::get_shape() {
+    return shape;
+}
 
 void Player::move(int framerate_limit) {
     // move
     int k = 1000;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        this->position.x +=
-            std::sin(-this->angle) * this->speed / framerate_limit * k;
-        this->position.y +=
-            std::cos(-this->angle) * this->speed / framerate_limit * k;
+        position.x += std::sin(-angle) * speed / framerate_limit * k;
+        position.y += std::cos(-angle) * speed / framerate_limit * k;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        this->position.x -=
-            std::sin(-this->angle) * this->speed / framerate_limit * k;
-        this->position.y -=
-            std::cos(-this->angle) * this->speed / framerate_limit * k;
+        position.x -= std::sin(-angle) * speed / framerate_limit * k;
+        position.y -= std::cos(-angle) * speed / framerate_limit * k;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        this->position.x += std::sin(-this->angle + M_PI / 2) * this->speed /
-                            framerate_limit * k;
-        this->position.y += std::cos(-this->angle + M_PI / 2) * this->speed /
-                            framerate_limit * k;
+        position.x += std::sin(-angle + M_PI / 2) * speed / framerate_limit * k;
+        position.y += std::cos(-angle + M_PI / 2) * speed / framerate_limit * k;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        this->position.x += std::sin(-this->angle - M_PI / 2) * this->speed /
-                            framerate_limit * k;
-        this->position.y += std::cos(-this->angle - M_PI / 2) * this->speed /
-                            framerate_limit * k;
+        position.x += std::sin(-angle - M_PI / 2) * speed / framerate_limit * k;
+        position.y += std::cos(-angle - M_PI / 2) * speed / framerate_limit * k;
     }
-    this->shape.setPosition(this->position.x, this->position.y);
+    shape.setPosition(position.x, position.y);
 
     // rotate
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        this->angle -= this->speed_rotation / framerate_limit * k;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        this->angle += this->speed_rotation / framerate_limit * k;
-    }
-    this->shape.setRotation(this->angle * 180 / M_PI - 180);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        angle -= speed_rotation / framerate_limit * k;
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        angle += speed_rotation / framerate_limit * k;
+    shape.setRotation(angle * 180 / M_PI - 180);
 }
 
-void Player::set_rotation(double anlge) { this->angle = anlge; }
+void Player::set_rotation(double anlge) {
+    this->angle = anlge;
+}

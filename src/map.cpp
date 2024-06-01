@@ -1,15 +1,18 @@
-#include "map.hpp"
+#include "Map/map.hpp"
 
-std::vector<Object> Map::get_objects() { return this->objs; }
-
-void Map::set_objects(std::vector<Object> objs) {
-    this->objs.clear();
-    for (int i = 0; i < objs.size(); i++) add_object(objs[i]);
+std::vector<Object> Map::get_objects() {
+    return this->objs;
 }
 
-void Map::add_object(Object obj) { this->objs.push_back(obj); }
+void Map::set_objects(const std::vector<Object> &objs) {
+    this->objs = objs;
+}
 
-void Map::draw(sf::RenderWindow* screen) {
-    for (int i = 0; i < this->objs.size(); i++)
-        (*screen).draw(this->objs[i].get_share());
+void Map::add_object(const Object &obj) {
+    objs.push_back(obj);
+}
+
+void Map::draw(sf::RenderWindow *screen) {
+    for (int i = 0; i < objs.size(); i++)
+        screen->draw(objs[i].get_share());
 }

@@ -1,11 +1,12 @@
 #pragma once
 
-#include <common.hpp>
+#include "Common/common.hpp"
+
 #include <vector>
 
 class Object {
-   public:
-    Object(std::vector<Point2> points);
+public:
+    Object(const std::vector<Point2> &points);
 
     sf::ConvexShape get_share();
     std::vector<Point2> get_points();
@@ -14,7 +15,7 @@ class Object {
     void set_color(unsigned char r, unsigned char g, unsigned char b);
     void set_height(int h);
 
-   private:
+private:
     std::vector<Point2> points = {};
     sf::ConvexShape share;
     int height = 40;

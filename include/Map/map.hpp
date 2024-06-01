@@ -1,17 +1,16 @@
 #pragma once
 
-#include <common.hpp>
-#include <object.hpp>
+#include "Object/object.hpp"
 
 class Map {
-   public:
+public:
     std::vector<Object> get_objects();
 
-    void set_objects(std::vector<Object> objs);
-    void add_object(Object obj);
+    void set_objects(const std::vector<Object> &objs);
+    void add_object(const Object &obj);
 
-    void draw(sf::RenderWindow* screen);
+    void draw(sf::RenderWindow *screen);
 
-   private:
+private:
     std::vector<Object> objs;
 };

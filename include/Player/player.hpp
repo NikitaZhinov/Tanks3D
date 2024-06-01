@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Common/common.hpp"
+
 #include <cmath>
-#include <common.hpp>
 
 class Player {
-   public:
+public:
     Player(int x, int y, int r, double angle);
 
     Point2 get_position();
@@ -18,7 +19,7 @@ class Player {
 
     void move(int framerate_limit);
 
-   private:
+private:
     Point2 position;
     float radius;
     sf::ConvexShape shape;

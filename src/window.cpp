@@ -1,14 +1,15 @@
-#include "window.hpp"
+#include "Window/window.hpp"
 
-Window::Window(int w, int h, std::string t) {
-    this->WIDTH = w;
-    this->HEIGHT = h;
-    this->TITLE = t.c_str();
+Window::Window(int w, int h, const std::string &t) {
+    WIDTH = w;
+    HEIGHT = h;
+    TITLE = t;
 }
 
 Point2 Window::get_size() {
-    Point2 size = {(double)this->WIDTH, (double)this->HEIGHT};
-    return size;
+    return { (double)WIDTH, (double)HEIGHT };
 }
 
-std::string Window::get_title() { return this->TITLE; }
+std::string Window::get_title() {
+    return TITLE;
+}
