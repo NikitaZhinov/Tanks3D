@@ -45,7 +45,7 @@ int main() {
         { 200, 300 }
     };
 
-    Object obj1(points1);
+    Object obj1(points1, "../textures/wall.jpg");
     obj1.set_color(0, 0, 200);
     Object obj2(points2);
     obj2.set_color(0, 0, 200);

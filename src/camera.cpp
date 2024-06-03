@@ -6,9 +6,8 @@
 
 Camera::Camera(int number_of_lines, Map &map, Player *player, sf::RenderWindow *screen) {
     set_number_of_lines(number_of_lines);
-    d_ = (std::sin(M_PI - viewing_angle / 2) * screen->getSize().x / 2) /
-         std::sin(viewing_angle / 2);
-    deviation = viewing_angle / number_of_lines;
+    d_ = (std::sin(M_PI - viewing_angle / 2) * screen->getSize().x / 2) / std::sin(viewing_angle / 2);
+    line.resize(number_of_lines);
 
     objs = map.get_objects();
     this->player = player;
@@ -30,9 +29,7 @@ void Camera::set_player(Player *player) {
 
 void Camera::set_viewing_angle(double n) {
     viewing_angle = n;
-    d_ =
-        (std::sin(M_PI - viewing_angle / 2) * number_of_lines / 2) /
-        std::sin(viewing_angle / 2);
+    d_ = (std::sin(M_PI - viewing_angle / 2) * number_of_lines / 2) / std::sin(viewing_angle / 2);
 }
 
 int Camera::get_number_of_lines() {
@@ -62,14 +59,14 @@ void Camera::draw() {
         k = (points_player[0].y - points_player[1].y) / dx;
         b = points_player[0].y - k * points_player[0].x;
 
-        // sf::Vertex line[] = {
+        // sf::Vertex l[] = {
         //     sf::Vertex(sf::Vector2f((points_player)[0].x,
         //     (points_player)[0].y)),
         //     sf::Vertex(sf::Vector2f((points_player)[1].x,
         //     (points_player)[1].y)),
         // };
-        // (*screen).draw(line, 2, sf::Lines);
-
+        // screen->draw(l, 2, sf::Lines);
+        
         std::sort(objs.begin(), objs.end(), [this](Object &a, Object &b) {
             return get_distance(a) > get_distance(b);
         });
@@ -78,16 +75,17 @@ void Camera::draw() {
             double d = get_distance(objs[j]);
             if (d >= 0) {
                 double b_ = d_ / d * objs[j].get_height();
-                double len = screen->getSize().x /
-                             (double)number_of_lines;
-                line.setSize(sf::Vector2f(len, b_));
-                line.setPosition(len * i, ((double)screen->getSize().y - b_) / 2);
+                double len = screen->getSize().x / (double)number_of_lines;
+                line[i].setSize(sf::Vector2f(len, b_));
+                line[i].setPosition(len * i, ((double)screen->getSize().y - b_) / 2);
                 int color = 255 - d / (length / 255.);
                 if (color < 0)
                     color = 0;
-                line.setFillColor(sf::Color(0, color, 0));
+                line[i].setFillColor(sf::Color(color, color, color));
+                line[i].setTexture(&objs[j].get_texture());
+                line[i].setTextureRect(sf::IntRect(i, 0, len, objs[j].get_texture().getSize().y));
 
-                screen->draw((line));
+                screen->draw((line[i]));
             }
         }
     }

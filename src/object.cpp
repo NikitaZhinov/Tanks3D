@@ -10,6 +10,11 @@ Object::Object(const std::vector<Point2> &points) {
     }
 }
 
+Object::Object(const std::vector<Point2> &points, std::string path_to_texture_file) :
+    Object(points) {
+    texture.loadFromFile(path_to_texture_file);
+}
+
 sf::ConvexShape Object::get_share() {
     return share;
 }
@@ -20,6 +25,10 @@ std::vector<Point2> Object::get_points() {
 
 int Object::get_height() {
     return height;
+}
+
+sf::Texture &Object::get_texture() {
+    return texture;
 }
 
 void Object::set_color(unsigned char r, unsigned char g, unsigned char b) {
