@@ -1,4 +1,4 @@
-#include "Window/window.hpp"
+#include "Raycast/raycast.hpp"
 
 Window::Window(int w, int h, const std::string &t) {
     WIDTH = w;

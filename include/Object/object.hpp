@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Common/common.hpp"
-
-#include <vector>
+#include "Raycast/raycast.hpp"
 
 class Object {
 public:

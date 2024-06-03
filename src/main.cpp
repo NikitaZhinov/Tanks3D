@@ -1,31 +1,4 @@
-#include "Camera/camera.hpp"
-#include "Map/map.hpp"
-#include "Player/player.hpp"
-#include "Window/window.hpp"
-
-#include <chrono>
-
-namespace Time {
-    namespace {
-        double _time;
-        double _deltaTime;
-    } // namespace
-
-    double time() {
-        return _time;
-    }
-
-    double deltaTime() {
-        return _deltaTime;
-    }
-
-    void update() {
-        std::chrono::duration<double> t =
-            std::chrono::system_clock::now().time_since_epoch();
-        _deltaTime = t.count() - _time;
-        _time = t.count();
-    }
-} // namespace Time
+#include "Raycast/raycast.hpp"
 
 int main() {
     const int MAX_FPS = 1000;

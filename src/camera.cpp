@@ -1,8 +1,4 @@
-#include "Camera/camera.hpp"
-
-#include "Object/object.hpp"
-
-#include <algorithm>
+#include "Raycast/raycast.hpp"
 
 Camera::Camera(int number_of_lines, Map &map, Player *player, sf::RenderWindow *screen) {
     set_number_of_lines(number_of_lines);
@@ -66,7 +62,7 @@ void Camera::draw() {
         //     (points_player)[1].y)),
         // };
         // screen->draw(l, 2, sf::Lines);
-        
+
         std::sort(objs.begin(), objs.end(), [this](Object &a, Object &b) {
             return get_distance(a) > get_distance(b);
         });

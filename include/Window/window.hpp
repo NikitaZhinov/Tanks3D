@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Common/common.hpp"
-
-#include <string>
+#include "Raycast/raycast.hpp"
 
 class Window {
 public:

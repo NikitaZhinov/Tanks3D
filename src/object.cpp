@@ -1,6 +1,4 @@
-#include "Object/object.hpp"
-
-#include <SFML/Graphics/Color.hpp>
+#include "Raycast/raycast.hpp"
 
 Object::Object(const std::vector<Point2> &points) {
     share.setPointCount(points.size());

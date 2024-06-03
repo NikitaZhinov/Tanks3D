@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Common/common.hpp"
-
-#include <cmath>
+#include "Raycast/raycast.hpp"
 
 class Player {
 public:

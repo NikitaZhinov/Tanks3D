@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Common/common.hpp"
-#include "Map/map.hpp"
-#include "Object/object.hpp"
-#include "Player/player.hpp"
+#include "Raycast/raycast.hpp"
 
 class Camera {
 public:
