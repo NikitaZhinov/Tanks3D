@@ -20,8 +20,8 @@ public:
 private:
     double viewing_angle = M_PI / 1.5, length = 255;
     int number_of_lines;
-    std::vector<sf::RectangleShape> line;
-    // sf::RectangleShape line;
+    // std::vector<sf::RectangleShape> line;
+    sf::RectangleShape line;
     double d_, deviation, dx, k, b;
     std::vector<Object> objs;
     sf::RenderWindow *screen;
