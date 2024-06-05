@@ -1,4 +1,5 @@
 #include "Raycast/raycast.hpp"
+#include <SFML/Graphics/Texture.hpp>
 
 int main() {
     const int MAX_FPS = 1000;
@@ -18,7 +19,10 @@ int main() {
         { 200, 300 }
     };
 
-    Object obj1(points1, "../textures/wall.jpg");
+    sf::Texture wall_texture;
+    wall_texture.loadFromFile("../textures/wall.jpg");
+
+    Object obj1(points1, &wall_texture);
     obj1.set_color(0, 0, 200);
     Object obj2(points2);
     obj2.set_color(0, 0, 200);

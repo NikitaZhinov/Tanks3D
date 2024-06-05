@@ -41,8 +41,7 @@ Player *Camera::get_player() {
 
 void Camera::draw() {
     for (int i = 0; i < number_of_lines; i++) {
-        angle_player_line = player->get_angle() -
-                            viewing_angle / 2 + i * deviation;
+        angle_player_line = player->get_angle() - viewing_angle / 2 + i * deviation;
 
         points_player[0] = player->get_position();
         points_player[1] = {
@@ -77,10 +76,10 @@ void Camera::draw() {
                 if (color < 0)
                     color = 0;
                 line.setFillColor(sf::Color(color, color, color));
-                line.setTexture(&objs[j].get_texture());
-                line.setTextureRect(sf::IntRect(i, 0, len, objs[j].get_texture().getSize().y));
-
-                screen->draw((line));
+                line.setTexture(objs[j].get_texture());
+                if (objs[j].get_texture())
+                    line.setTextureRect(sf::IntRect(i, 0, len, objs[j].get_texture()->getSize().y));
+                screen->draw(line);
             }
         }
     }
