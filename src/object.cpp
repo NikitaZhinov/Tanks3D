@@ -11,16 +11,6 @@ Object::Object(const std::vector<Point2> &points) {
 Object::Object(const std::vector<Point2> &points, sf::Texture *texture) :
     Object(points) {
     this->texture = texture;
-    number_of_points_per_face.resize(points.size());
-
-    for (int i = 0; i < points.size(); i++) {
-        Point2 p1 = points[i];
-        Point2 p2 = points[(i + 1 == points.size()) ? 0 : i + 1];
-
-        double len = std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
-        int number_of_points = len / texture->getSize().x;
-        number_of_points_per_face[i] = number_of_points;
-    }
 }
 
 sf::ConvexShape Object::get_share() {
@@ -37,10 +27,6 @@ int Object::get_height() {
 
 sf::Texture *Object::get_texture() {
     return texture;
-}
-
-std::vector<int> &Object::get_number_of_points_per_face() {
-    return number_of_points_per_face;
 }
 
 void Object::set_color(unsigned char r, unsigned char g, unsigned char b) {

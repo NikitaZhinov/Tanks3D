@@ -62,33 +62,37 @@ void Camera::draw() {
         // screen->draw(l, 2, sf::Lines);
 
         std::sort(objs.begin(), objs.end(), [this](Object &a, Object &b) {
-            return get_distance(a) > get_distance(b);
+            return get_distance(a).distance > get_distance(b).distance;
         });
 
-        for (int j = 0; j < objs.size(); j++) {
-            double d = get_distance(objs[j]);
-            if (d >= 0) {
-                double b_ = d_ / d * objs[j].get_height();
+        for (auto &obj : objs) {
+            Intersection inter = get_distance(obj);
+            if (inter.distance >= 0) {
+                double b_ = d_ / inter.distance * obj.get_height();
                 double len = screen->getSize().x / (double)number_of_lines;
                 line.setSize(sf::Vector2f(len, b_));
                 line.setPosition(len * i, ((double)screen->getSize().y - b_) / 2);
-                int color = 255 - d / (length / 255.);
+                int color = 255 - inter.distance / (length / 255.);
                 if (color < 0)
                     color = 0;
                 line.setFillColor(sf::Color(color, color, color));
-                line.setTexture(objs[j].get_texture());
-                if (objs[j].get_texture())
-                    line.setTextureRect(sf::IntRect(i, 0, len, objs[j].get_texture()->getSize().y));
+                line.setTexture(obj.get_texture());
+                if (obj.get_texture()) {
+                    double len_of_edge = std::sqrt(std::pow(inter.edge[0].x - inter.edge[1].x, 2) + std::pow(inter.edge[0].y - inter.edge[1].y, 2));
+                    double p1_to_inter = std::sqrt(std::pow(inter.edge[0].x - inter.inter.x, 2) + std::pow(inter.edge[0].y - inter.inter.y, 2));
+                    int j = p1_to_inter * (obj.get_texture()->getSize().x / 1.5) / len_of_edge;
+                    line.setTextureRect(sf::IntRect(j, 0, j + len, obj.get_texture()->getSize().y));
+                }
                 screen->draw(line);
             }
         }
     }
 }
 
-double Camera::get_distance(Object &obj) {
+Camera::Intersection Camera::get_distance(Object &obj) {
     // if object is not initialized
     if (obj.get_points().empty())
-        return -1;
+        return {-1};
 
     // get all point of object
     int count_points_obj = obj.get_points().size();
@@ -98,7 +102,7 @@ double Camera::get_distance(Object &obj) {
 
     double len = this->length;
     bool flag = false;
-    Point2 p1, p2;
+    Point2 p1, p2, last_p1, last_p2, inter;
     double dx_obj, k_obj, b_obj, x, y;
     for (int i = 0; i < count_points_obj; i++) {
         p1 = { points_obj[i].x, points_obj[i].y };
@@ -140,13 +144,19 @@ double Camera::get_distance(Object &obj) {
             x >= std::min(p1.x, p2.x) and x <= std::max(p1.x, p2.x) and
             y >= std::min(p1.y, p2.y) and y <= std::max(p1.y, p2.y)) {
             flag = true;
+            int old_len = len;
             len = std::min(len,
                            std::sqrt(std::pow(std::max(x, points_player[0].x) - std::min(x, points_player[0].x), 2) +
                                      std::pow(std::max(y, points_player[0].y) - std::min(y, points_player[0].y), 2)));
+            if (len < old_len) {
+                inter = {x, y};
+                last_p1 = p1;
+                last_p2 = p2;
+            }
         }
     }
     if (!flag)
-        return -2;
+        return {-2};
 
-    return len;
+    return {len, inter, last_p1, last_p2};
 }

@@ -19,12 +19,13 @@ int main() {
         { 200, 300 }
     };
 
-    sf::Texture wall_texture;
+    sf::Texture wall_texture, wall2_texture;
     wall_texture.loadFromFile("../textures/wall.jpg");
+    wall2_texture.loadFromFile("../textures/wall2.jpg");
 
     Object obj1(points1, &wall_texture);
     obj1.set_color(0, 0, 200);
-    Object obj2(points2);
+    Object obj2(points2, &wall2_texture);
     obj2.set_color(0, 0, 200);
     Map map;
     map.add_object(obj1);

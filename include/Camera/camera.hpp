@@ -18,6 +18,12 @@ public:
     void draw();
 
 private:
+    struct Intersection {
+        double distance;
+        Point2 inter;
+        Point2 edge[2];
+    };
+
     double viewing_angle = M_PI / 1.5, length = 255;
     int number_of_lines;
     // std::vector<sf::RectangleShape> line;
@@ -30,5 +36,5 @@ private:
     Point2 points_player[2];
     double floor_height = 1;
 
-    double get_distance(Object &obj);
+    Intersection get_distance(Object &obj);
 };
