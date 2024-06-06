@@ -3,6 +3,7 @@
 Camera::Camera(int number_of_lines, Map &map, Player *player, sf::RenderWindow *screen) {
     set_number_of_lines(number_of_lines);
     d_ = (std::sin(M_PI - viewing_angle / 2) * screen->getSize().x / 2) / std::sin(viewing_angle / 2);
+    width_line = screen->getSize().x / (double)number_of_lines;
 
     objs = map.get_objects();
     this->player = player;
@@ -32,7 +33,7 @@ int Camera::get_number_of_lines() {
 }
 
 std::vector<Object> Camera::get_map() {
-    return objs;
+    return *objs;
 }
 
 Player *Camera::get_player() {
@@ -40,10 +41,14 @@ Player *Camera::get_player() {
 }
 
 void Camera::draw() {
+    if (objs->empty())
+        return;
+
+    points_player[0] = player->get_position();
+
     for (int i = 0; i < number_of_lines; i++) {
         angle_player_line = player->get_angle() - viewing_angle / 2 + i * deviation;
 
-        points_player[0] = player->get_position();
         points_player[1] = {
             player->get_position().x + std::sin(-(angle_player_line)) * length,
             player->get_position().y + std::cos(-(angle_player_line)) * length
@@ -61,52 +66,47 @@ void Camera::draw() {
         // };
         // screen->draw(l, 2, sf::Lines);
 
-        std::sort(objs.begin(), objs.end(), [this](Object &a, Object &b) {
-            return get_distance(a).distance > get_distance(b).distance;
-        });
+        lines.clear();
 
-        for (auto &obj : objs) {
-            Intersection inter = get_distance(obj);
+        for (auto &obj : *objs) {
+            inter = get_intersection(obj);
             if (inter.distance >= 0) {
                 double b_ = d_ / inter.distance * obj.get_height();
-                double len = screen->getSize().x / (double)number_of_lines;
-                line.setSize(sf::Vector2f(len, b_));
-                line.setPosition(len * i, ((double)screen->getSize().y - b_) / 2);
-                int color = 255 - inter.distance / (length / 255.);
-                if (color < 0)
-                    color = 0;
-                line.setFillColor(sf::Color(color, color, color));
+                line.setSize(sf::Vector2f(width_line, b_));
+                line.setPosition(width_line * i, ((double)screen->getSize().y - b_) / 2);
+                line.setFillColor(obj.get_colot());
                 line.setTexture(obj.get_texture());
                 if (obj.get_texture()) {
-                    double len_of_edge = std::sqrt(std::pow(inter.edge[0].x - inter.edge[1].x, 2) + std::pow(inter.edge[0].y - inter.edge[1].y, 2));
-                    double p1_to_inter = std::sqrt(std::pow(inter.edge[0].x - inter.inter.x, 2) + std::pow(inter.edge[0].y - inter.inter.y, 2));
+                    double len_of_edge = std::sqrt((inter.edge[0].x - inter.edge[1].x) * (inter.edge[0].x - inter.edge[1].x) + (inter.edge[0].y - inter.edge[1].y) * (inter.edge[0].y - inter.edge[1].y));
+                    double p1_to_inter = std::sqrt((inter.edge[0].x - inter.inter.x) * (inter.edge[0].x - inter.inter.x) + (inter.edge[0].y - inter.inter.y) * (inter.edge[0].y - inter.inter.y));
                     int j = p1_to_inter * (obj.get_texture()->getSize().x / 1.5) / len_of_edge;
-                    line.setTextureRect(sf::IntRect(j, 0, j + len, obj.get_texture()->getSize().y));
+                    line.setTextureRect(sf::IntRect(j, 0, j + width_line, obj.get_texture()->getSize().y));
                 }
-                screen->draw(line);
+                lines.push_back(line);
             }
         }
+
+        std::sort(lines.begin(), lines.end(), [this](const sf::RectangleShape &a, const sf::RectangleShape &b) {
+            return a.getSize().y < b.getSize().y;
+        });
+
+        for (auto &l : lines)
+            screen->draw(l);
     }
 }
 
-Camera::Intersection Camera::get_distance(Object &obj) {
-    // if object is not initialized
-    if (obj.get_points().empty())
-        return {-1};
-
+Camera::Intersection Camera::get_intersection(Object &obj) {
     // get all point of object
-    int count_points_obj = obj.get_points().size();
-    Point2 points_obj[count_points_obj];
-    for (int i = 0; i < count_points_obj; i++)
-        points_obj[i] = obj.get_points()[i];
+    std::vector<Point2> points_obj = obj.get_points();
 
     double len = this->length;
     bool flag = false;
     Point2 p1, p2, last_p1, last_p2, inter;
     double dx_obj, k_obj, b_obj, x, y;
-    for (int i = 0; i < count_points_obj; i++) {
+
+    for (int i = 0; i < points_obj.size(); i++) {
         p1 = { points_obj[i].x, points_obj[i].y };
-        if (i + 1 == count_points_obj)
+        if (i + 1 == points_obj.size())
             p2 = { points_obj[0].x, points_obj[0].y };
         else
             p2 = { points_obj[i + 1].x, points_obj[i + 1].y };
@@ -144,19 +144,33 @@ Camera::Intersection Camera::get_distance(Object &obj) {
             x >= std::min(p1.x, p2.x) and x <= std::max(p1.x, p2.x) and
             y >= std::min(p1.y, p2.y) and y <= std::max(p1.y, p2.y)) {
             flag = true;
-            int old_len = len;
-            len = std::min(len,
-                           std::sqrt(std::pow(std::max(x, points_player[0].x) - std::min(x, points_player[0].x), 2) +
-                                     std::pow(std::max(y, points_player[0].y) - std::min(y, points_player[0].y), 2)));
-            if (len < old_len) {
-                inter = {x, y};
+            double new_len = std::sqrt((std::max(x, points_player[0].x) - std::min(x, points_player[0].x)) * (std::max(x, points_player[0].x) - std::min(x, points_player[0].x)) +
+                                       (std::max(y, points_player[0].y) - std::min(y, points_player[0].y)) * (std::max(y, points_player[0].y) - std::min(y, points_player[0].y)));
+            if (new_len < len) {
+                len = new_len;
+                inter = { x, y };
                 last_p1 = p1;
                 last_p2 = p2;
             }
         }
     }
     if (!flag)
-        return {-2};
+        return { -2 };
 
-    return {len, inter, last_p1, last_p2};
+    return { len, inter, last_p1, last_p2 };
+}
+
+double Camera::get_distance(Object &obj) {
+    Point2 p0 = obj.get_points()[0];
+    double res = std::sqrt((points_player[0].x - p0.x) * (points_player[0].x - p0.x) +
+                           (points_player[0].y - p0.y) * (points_player[0].y - p0.y));
+
+    for (auto &point : obj.get_points()) {
+        res = std::min(
+            res,
+            std::sqrt((points_player[0].x - point.x) * (points_player[0].x - point.x) +
+                      (points_player[0].y - point.y) * (points_player[0].y - point.y)));
+    }
+
+    return res;
 }

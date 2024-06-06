@@ -4,7 +4,7 @@
 
 class Map {
 public:
-    std::vector<Object> get_objects();
+    std::vector<Object> *get_objects();
 
     void set_objects(const std::vector<Object> &objs);
     void add_object(const Object &obj);

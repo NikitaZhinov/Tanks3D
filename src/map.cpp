@@ -1,7 +1,7 @@
 #include "Raycast/raycast.hpp"
 
-std::vector<Object> Map::get_objects() {
-    return this->objs;
+std::vector<Object> *Map::get_objects() {
+    return &objs;
 }
 
 void Map::set_objects(const std::vector<Object> &objs) {

@@ -8,9 +8,23 @@ Object::Object(const std::vector<Point2> &points) {
     }
 }
 
+Object::Object(const std::vector<Point2> &points, unsigned char r, unsigned char g, unsigned char b) :
+    Object(points) {
+    this->r = r;
+    this->g = g;
+    this->b = b;
+}
+
 Object::Object(const std::vector<Point2> &points, sf::Texture *texture) :
     Object(points) {
     this->texture = texture;
+}
+
+Object::Object(const std::vector<Point2> &points, unsigned char r, unsigned char g, unsigned char b, sf::Texture *texture) :
+    Object(points, texture) {
+    this->r = r;
+    this->g = g;
+    this->b = b;
 }
 
 sf::ConvexShape Object::get_share() {
@@ -27,6 +41,11 @@ int Object::get_height() {
 
 sf::Texture *Object::get_texture() {
     return texture;
+}
+
+sf::Color Object::get_colot() {
+    sf::Color c(r, g, b);
+    return c;
 }
 
 void Object::set_color(unsigned char r, unsigned char g, unsigned char b) {

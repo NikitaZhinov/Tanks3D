@@ -3,6 +3,8 @@ project(Tanks3D)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_COMPILE clang++)
+# set(CMAKE_CXX_FLAGS "-O3")
 
 file(GLOB SRC src/*.cpp)
 add_executable(Tanks3D ${SRC})
