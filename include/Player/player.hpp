@@ -15,7 +15,7 @@ public:
     void set_radius(float radius);
     void set_rotation(double anlge);
 
-    void move(int framerate_limit);
+    void move(int framerate_limit, sf::RenderWindow &screen);
 
 private:
     Point2 position;
@@ -23,8 +23,8 @@ private:
     sf::ConvexShape shape;
     sf::Texture texture;
     double angle;
-    double speed = 0.05;
-    double speed_rotation = M_PI / 768;
+    double speed = 50;
+    double speed_rotation = M_PI / 50;
 
     void init();
 };

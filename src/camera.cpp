@@ -50,8 +50,8 @@ void Camera::draw() {
         angle_player_line = player->get_angle() - viewing_angle / 2 + i * deviation;
 
         points_player[1] = {
-            player->get_position().x + std::sin(-(angle_player_line)) * length,
-            player->get_position().y + std::cos(-(angle_player_line)) * length
+            points_player[0].x + std::sin(-angle_player_line) * length,
+            points_player[0].y + std::cos(-angle_player_line) * length
         };
 
         dx = points_player[0].x - points_player[1].x;

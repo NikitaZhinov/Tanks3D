@@ -1,9 +1,9 @@
 #include "Raycast/raycast.hpp"
+#include <SFML/Window/Keyboard.hpp>
 
 int main() {
-    const int MAX_FPS = 1000;
+    const int MAX_FPS = 60;
 
-    Window window(800, 600, "Tanks3D");
     Player player(80, 300, 10, M_PI);
     std::vector<Point2> points1 = {
         {   0,   0 },
@@ -42,37 +42,39 @@ int main() {
     map.add_object(obj3);
 
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
+    settings.antialiasingLevel = 1;
 
     sf::RenderWindow screen(
-        sf::VideoMode(window.get_size().x, window.get_size().y),
-        window.get_title().c_str(),
+        sf::VideoMode(800, 600),
+        "Tanks3D",
         sf::Style::Default,
         settings);
     screen.setFramerateLimit(MAX_FPS);
+    screen.setMouseCursorVisible(false);
 
-    Camera camera(window.get_size().x, map, &player, &screen);
+    Camera camera(screen.getSize().x, map, &player, &screen);
 
-    sf::RectangleShape floor(sf::Vector2f(window.get_size().x, window.get_size().y / 2));
-    floor.setPosition(sf::Vector2f(0, window.get_size().y / 2));
+    sf::RectangleShape floor(sf::Vector2f(screen.getSize().x, screen.getSize().y / 2.));
+    floor.setPosition(sf::Vector2f(0, screen.getSize().y / 2.));
     floor.setFillColor(sf::Color(150, 150, 150));
 
-    sf::RectangleShape sky(sf::Vector2f(window.get_size().x, window.get_size().y / 2));
+    sf::RectangleShape sky(sf::Vector2f(screen.getSize().x, screen.getSize().y / 2.));
     sky.setPosition(sf::Vector2f(0, 0));
     sky.setFillColor(sf::Color(130, 195, 255));
 
     while (screen.isOpen()) {
         sf::Event event;
         while (screen.pollEvent(event))
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed or sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 screen.close();
 
         Time::update();
-        int fps = 1.0 / Time::deltaTime();
+        int fps = 1. / Time::deltaTime();
         std::string title = std::to_string(fps) + " FPS";
         screen.setTitle(title);
 
         screen.clear();
+
         screen.draw(floor);
         screen.draw(sky);
 
@@ -81,7 +83,7 @@ int main() {
         map.draw(&screen);
 
         screen.draw(player.get_shape());
-        player.move(fps);
+        player.move(fps, screen);
 
         screen.display();
     }

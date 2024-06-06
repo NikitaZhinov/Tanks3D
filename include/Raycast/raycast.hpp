@@ -21,5 +21,4 @@ class Player;
 #include "Object/object.hpp"
 #include "Player/player.hpp"
 #include "Time/time.hpp"
-#include "Window/window.hpp"
 #include "Sprite/sprite.hpp"
