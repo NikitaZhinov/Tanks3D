@@ -1,7 +1,7 @@
 #include "Raycast/raycast.hpp"
 
-Sprite::Sprite(int width, int height, sf::Texture *texture) {
+Sprite::Sprite(Point2 pos, int width, int height, sf::Texture *texture) :
+    Object({pos}) {
     this->width = width;
     this->height = height;
-    this->texture = texture;
 }

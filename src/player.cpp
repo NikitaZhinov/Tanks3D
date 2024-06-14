@@ -1,4 +1,5 @@
 #include "Raycast/raycast.hpp"
+
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Mouse.hpp>
 
@@ -51,30 +52,30 @@ sf::ConvexShape Player::get_shape() {
 
 void Player::move(int framerate_limit, sf::RenderWindow &screen) {
     // move
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        position.x += std::sin(-angle) * speed / framerate_limit;
-        position.y += std::cos(-angle) * speed / framerate_limit;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        position.x -= std::sin(-angle) * speed / framerate_limit;
-        position.y -= std::cos(-angle) * speed / framerate_limit;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        position.x += std::sin(-angle + M_PI / 2) * speed / framerate_limit;
-        position.y += std::cos(-angle + M_PI / 2) * speed / framerate_limit;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        position.x += std::sin(-angle - M_PI / 2) * speed / framerate_limit;
-        position.y += std::cos(-angle - M_PI / 2) * speed / framerate_limit;
+    if (framerate_limit != 0) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            position.x += std::sin(-angle) * speed / framerate_limit;
+            position.y += std::cos(-angle) * speed / framerate_limit;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            position.x -= std::sin(-angle) * speed / framerate_limit;
+            position.y -= std::cos(-angle) * speed / framerate_limit;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            position.x += std::sin(-angle + M_PI / 2) * speed / framerate_limit;
+            position.y += std::cos(-angle + M_PI / 2) * speed / framerate_limit;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            position.x += std::sin(-angle - M_PI / 2) * speed / framerate_limit;
+            position.y += std::cos(-angle - M_PI / 2) * speed / framerate_limit;
+        }
     }
     shape.setPosition(position.x, position.y);
 
     // rotate
     sf::Vector2i localPosition = sf::Mouse::getPosition(screen);
     sf::Mouse::setPosition(sf::Vector2i(screen.getSize().x / 2, screen.getSize().y / 2), screen);
-    if (framerate_limit != 0)
-        angle += speed_rotation / framerate_limit * static_cast<double>(static_cast<int>(localPosition.x) - static_cast<int>(screen.getSize().x / 2.));
-
+    angle += speed_rotation * static_cast<double>(static_cast<int>(localPosition.x) - static_cast<int>(screen.getSize().x / 2.));
     shape.setRotation(angle * 180 / M_PI - 180);
 }
 

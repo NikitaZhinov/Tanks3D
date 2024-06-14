@@ -2,11 +2,10 @@
 
 #include "Raycast/raycast.hpp"
 
-class Sprite {
+class Sprite : public Object {
 public:
-    Sprite(int width, int height, sf::Texture *texture);
+    Sprite(Point2 pos, int width, int height, sf::Texture *texture);
 
 private:
     int width = 0, height = 0;
-    sf::Texture *texture = nullptr;
 };

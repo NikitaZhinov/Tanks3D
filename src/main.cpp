@@ -1,5 +1,4 @@
 #include "Raycast/raycast.hpp"
-#include <SFML/Window/Keyboard.hpp>
 
 int main() {
     const int MAX_FPS = 60;

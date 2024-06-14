@@ -15,10 +15,11 @@ class Camera;
 class Map;
 class Object;
 class Player;
+class Sprite;
 
 #include "Camera/camera.hpp"
 #include "Map/map.hpp"
 #include "Object/object.hpp"
 #include "Player/player.hpp"
-#include "Time/time.hpp"
 #include "Sprite/sprite.hpp"
+#include "Time/time.hpp"

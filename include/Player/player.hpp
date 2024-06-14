@@ -24,7 +24,7 @@ private:
     sf::Texture texture;
     double angle;
     double speed = 50;
-    double speed_rotation = M_PI / 50;
+    double speed_rotation = M_PI / 5000;
 
     void init();
 };
